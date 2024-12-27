@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Screenplay Writer</title>
+    <style>
+        body {
+            font-family: 'Courier New', Courier, monospace;
+            margin: 0;
+            padding: 0;
+            background-color: #1e1e2f;
+            color: #e6e6e6;
+        }
+        header {
+            background: #282c34;
+            color: #61dafb;
+            padding: 1rem;
+            text-align: center;
+            font-size: 1.5rem;
+        }
+        .container {
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+        }
+        .toolbar {
+            display: flex;
+            background: #3a3f4b;
+            padding: 0.5rem;
+            gap: 0.5rem;
+            overflow-x: auto;
+        }
+        .toolbar button {
+            flex-shrink: 0;
+            padding: 0.5rem 1rem;
+            font-size: 0.9rem;
+            color: #ffffff;
+            background-color: #4a90e2;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .toolbar button:hover {
+            background-color: #357ab8;
+        }
+        textarea {
+            flex-grow: 1;
+            background: #282c34;
+            color: #ffffff;
+            border: none;
+            padding: 1rem;
+            font-size: 1rem;
+            font-family: 'Courier New', Courier, monospace;
+            resize: none;
+            outline: none;
+        }
+        footer {
+            background: #282c34;
+            color: #61dafb;
+            text-align: center;
+            padding: 0.5rem;
+            font-size: 0.8rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>Screenplay Writer - Inspired by WriterDuet</header>
+        <div class="toolbar">
+            <button onclick="formatText('sceneHeading')">Scene Heading</button>
+            <button onclick="formatText('action')">Action</button>
+            <button onclick="formatText('character')">Character</button>
+            <button onclick="formatText('dialogue')">Dialogue</button>
+            <button onclick="formatText('parenthetical')">Parenthetical</button>
+            <button onclick="saveDocument()">Save</button>
+            <button onclick="loadDocument()">Load</button>
+        </div>
+        <textarea id="screenplay" placeholder="Start writing your screenplay here..."></textarea>
+        <footer>Screenplay Writer © 2024</footer>
+    </div>
+    <script>
+        function formatText(type) {
+            const textarea = document.getElementById('screenplay');
+            const selectionStart = textarea.selectionStart;
+            const selectionEnd = textarea.selectionEnd;
+            const text = textarea.value;
+            let formattedText = '';
+
+            switch (type) {
+                case 'sceneHeading':
+                    formattedText = `\nINT./EXT. [PLACE] - [TIME]\n`;
+                    break;
+                case 'action':
+                    formattedText = `\n[ACTION]\n`;
+                    break;
+                case 'character':
+                    formattedText = `\n[CHARACTER NAME]\n`;
+                    break;
+                case 'dialogue':
+                    formattedText = `\n    [DIALOGUE]\n`;
+                    break;
+                case 'parenthetical':
+                    formattedText = `\n        (PARENTHETICAL)\n`;
+                    break;
+                default:
+                    return;
+            }
+
+            textarea.value = 
+                text.slice(0, selectionStart) + 
+                formattedText + 
+                text.slice(selectionEnd);
+            textarea.focus();
+            textarea.setSelectionRange(
+                selectionStart + formattedText.length, 
+                selectionStart + formattedText.length
+            );
+        }
+
+        function saveDocument() {
+            const screenplay = document.getElementById('screenplay').value;
+            localStorage.setItem('screenplay', screenplay);
+            alert('Screenplay saved!');
+        }
+
+        function loadDocument() {
+            const screenplay = localStorage.getItem('screenplay');
+            if (screenplay) {
+                document.getElementById('screenplay').value = screenplay;
+                alert('Screenplay loaded!');
+            } else {
+                alert('No saved screenplay found.');
+            }
+        }
+    </script>
+</body>
+</html>
